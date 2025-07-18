@@ -11,7 +11,7 @@ public record EntityRequestDTO(
         @NotBlank
         String password,
 
-        @Pattern(regexp = "^\\d{11}$")
+        @Pattern(regexp = "^\\d{11}$", message = "Deve conter 11 números")
         String cpf,
 
         @NotBlank @Email

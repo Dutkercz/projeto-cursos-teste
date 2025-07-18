@@ -27,11 +27,14 @@ public class UserService {
 
             return new EntityResponseDTO(userRepository.save(student));
 
-        }else {
+        } else if (entityRequestDTO.role().equalsIgnoreCase("instrutor")) {
             Instructor instructor = new Instructor(null, entityRequestDTO.name(),
                     entityRequestDTO.password(), entityRequestDTO.email(),
                     entityRequestDTO.cpf());
             return new EntityResponseDTO(userRepository.save(instructor));
+
+        } else {
+            throw new IllegalArgumentException("Role INVÁLIDO! Use 'Aluno' ou 'Instrutor'");
         }
     }
 
