@@ -31,7 +31,7 @@ public class RestExceptionsHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> illegalArgumentError(IllegalArgumentException e){
-        return ResponseEntity.badRequest().body(new ValidationErrors("role", e.getMessage()));
+        return ResponseEntity.badRequest().body(new ValidationErrors("error ", e.getMessage()));
     }
 
     public record ValidationErrors(String field, String message){
