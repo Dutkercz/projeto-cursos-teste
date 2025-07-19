@@ -2,7 +2,7 @@ package com.github.Dutkercz.demoPlataformaDeCursos.config;
 
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.TokenService;
-import com.github.Dutkercz.demoPlataformaDeCursos.services.UserService;
+import com.github.Dutkercz.demoPlataformaDeCursos.services.UserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,11 +18,11 @@ import java.io.IOException;
 public class SecurityFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-    private final UserService userService;
+    private final UserDetailService userDetailService;
 
-    public SecurityFilter(TokenService tokenService, UserService userService) {
+    public SecurityFilter(TokenService tokenService, UserDetailService userDetailService) {
         this.tokenService = tokenService;
-        this.userService = userService;
+        this.userDetailService = userDetailService;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             String cleanToken = requestHeader.replace("Bearer ", "");
             String userEmail = tokenService.getSubject(cleanToken);
 
-            User user = (User) userService.loadUserByUsername(userEmail);
+            User user = (User) userDetailService.loadUserByUsername(userEmail);
 
             UsernamePasswordAuthenticationToken userAuth =
                     new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
@@ -42,7 +42,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             if (SecurityContextHolder.getContext().getAuthentication() == null){
                 SecurityContextHolder.getContext().setAuthentication(userAuth);
             }
-            filterChain.doFilter(request, response);
         }
+        filterChain.doFilter(request, response);
     }
 }

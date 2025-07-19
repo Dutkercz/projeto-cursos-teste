@@ -11,7 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
