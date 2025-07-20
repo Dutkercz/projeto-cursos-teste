@@ -24,11 +24,8 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> register(@Valid @RequestBody EntityRequestDTO entityRequestDTO,
                                       UriComponentsBuilder builder){
-
         EntityResponseDTO entityResponseDTO = userService.saveEntity(entityRequestDTO);
         URI responseUri = builder.path("/user/{id}").buildAndExpand(entityResponseDTO.id()).toUri();
-
         return ResponseEntity.created(responseUri).body(entityResponseDTO);
     }
-
 }

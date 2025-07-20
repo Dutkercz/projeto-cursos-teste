@@ -7,6 +7,10 @@ import com.github.Dutkercz.demoPlataformaDeCursos.entities.Instructor;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.repositories.CourseRepository;
 import com.github.Dutkercz.demoPlataformaDeCursos.repositories.InstructorRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +27,7 @@ public class CourseService {
         this.instructorRepository = instructorRepository;
     }
 
+    @Transactional
     public ResponseCourseDTO createNewCourse(RequestCourseDTO requestDTO, String userEmail){
         User user = userVerification.validateUser(userEmail);
         if (user instanceof Instructor){
@@ -33,5 +38,19 @@ public class CourseService {
         }else {
             throw new AccessDeniedException("Apenas instrutores podem cadastar cursos");
         }
+    }
+
+    public Page<ResponseCourseDTO> findAll(Pageable pageable) {
+        return courseRepository.findAll(pageable).map(ResponseCourseDTO::new);
+    }
+
+    public ResponseCourseDTO findCourseById(Long id) {
+        return new ResponseCourseDTO(courseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Curso Id " + id + " não encontrado!")));
+    }
+
+    public Page<ResponseCourseDTO> findByInstructorName(String name, Pageable pageable) {
+        return courseRepository.findAllByInstructorNameContainingIgnoreCase(name, pageable)
+                .map(ResponseCourseDTO::new);
     }
 }

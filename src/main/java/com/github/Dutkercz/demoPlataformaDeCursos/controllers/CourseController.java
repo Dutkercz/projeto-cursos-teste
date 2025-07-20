@@ -4,12 +4,11 @@ import com.github.Dutkercz.demoPlataformaDeCursos.dtos.RequestCourseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.ResponseCourseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.CourseService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -32,4 +31,26 @@ public class CourseController {
         URI uri = builder.path("/course/{id}").buildAndExpand(courseDTO.id()).toUri();
         return ResponseEntity.created(uri).body(courseDTO);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseCourseDTO> findCourseById(@PathVariable Long id){
+        ResponseCourseDTO courseDTO = courseService.findCourseById(id);
+        return ResponseEntity.ok().body(courseDTO);
+    }
+
+    @GetMapping()
+    public ResponseEntity<Page<ResponseCourseDTO>> coursesList(Pageable pageable){
+        Page<ResponseCourseDTO> coursesDTOS = courseService.findAll(pageable);
+        return ResponseEntity.ok().body(coursesDTOS);
+    }
+
+    @GetMapping("/instructor/{name}")
+    public ResponseEntity<Page<ResponseCourseDTO>> findCourseByInstructorName(@PathVariable String name,
+                                                                              Pageable pageable){
+        Page<ResponseCourseDTO> coursesDTOS = courseService.findByInstructorName(name, pageable);
+        return ResponseEntity.ok().body(coursesDTOS);
+    }
+
+//    @GetMapping("/instructor/{id}")
+//    public ResponseEntity<ResponseCourseDTO> getByInstructorId()
 }
