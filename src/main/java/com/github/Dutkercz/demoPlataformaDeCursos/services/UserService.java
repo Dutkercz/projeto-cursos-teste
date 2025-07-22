@@ -4,6 +4,7 @@ import com.github.Dutkercz.demoPlataformaDeCursos.dtos.EntityRequestDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.EntityResponseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Instructor;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Student;
+import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -41,5 +42,9 @@ public class UserService{
         } else {
             throw new IllegalArgumentException("Role INVÁLIDO! Use 'Aluno' ou 'Instrutor'");
         }
+    }
+
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 }

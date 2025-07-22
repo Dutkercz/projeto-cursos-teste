@@ -2,9 +2,11 @@ package com.github.Dutkercz.demoPlataformaDeCursos.controllers;
 
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.EntityRequestDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.EntityResponseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -27,5 +29,16 @@ public class UserController {
         EntityResponseDTO entityResponseDTO = userService.saveEntity(entityRequestDTO);
         URI responseUri = builder.path("/user/{id}").buildAndExpand(entityResponseDTO.id()).toUri();
         return ResponseEntity.created(responseUri).body(entityResponseDTO);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getDetailTeste(@AuthenticationPrincipal User user){
+        return ResponseEntity.ok().body("Usuario logado " + user.getName());
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteLoggedUser(@AuthenticationPrincipal User user){
+        userService.deleteUser(user);
+        return ResponseEntity.noContent().build();
     }
 }
