@@ -1,8 +1,8 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.controllers;
 
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.EntityRequestDTO;
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.EntityResponseDTO;
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.EntityUpdateDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserRequestDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserResponseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserUpdateDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.UserService;
 import jakarta.validation.Valid;
@@ -25,11 +25,11 @@ public class UserController {
 
 
     @PostMapping
-    public ResponseEntity<?> register(@Valid @RequestBody EntityRequestDTO entityRequestDTO,
+    public ResponseEntity<?> register(@Valid @RequestBody UserRequestDTO userRequestDTO,
                                       UriComponentsBuilder builder){
-        EntityResponseDTO entityResponseDTO = userService.saveEntity(entityRequestDTO);
-        URI responseUri = builder.path("/user/{id}").buildAndExpand(entityResponseDTO.id()).toUri();
-        return ResponseEntity.created(responseUri).body(entityResponseDTO);
+        UserResponseDTO userResponseDTO = userService.saveEntity(userRequestDTO);
+        URI responseUri = builder.path("/user/{id}").buildAndExpand(userResponseDTO.id()).toUri();
+        return ResponseEntity.created(responseUri).body(userResponseDTO);
     }
 
     @GetMapping
@@ -38,10 +38,10 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<EntityResponseDTO> updateUser(@Valid @RequestBody EntityUpdateDTO updateDTO,
-                                        @AuthenticationPrincipal User user){
-        EntityResponseDTO entityResponseDTO = userService.updateUser(updateDTO, user);
-        return ResponseEntity.ok().body(entityResponseDTO);
+    public ResponseEntity<UserResponseDTO> updateUser(@Valid @RequestBody UserUpdateDTO updateDTO,
+                                                      @AuthenticationPrincipal User user){
+        UserResponseDTO userResponseDTO = userService.updateUser(updateDTO, user);
+        return ResponseEntity.ok().body(userResponseDTO);
     }
 
     @DeleteMapping

@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
     Page<Course> findAllByInstructorNameContainingIgnoreCase(String name, Pageable pageable);
+
+    Page<Course> findByStudentsId(Long id, Pageable pageable);
 }

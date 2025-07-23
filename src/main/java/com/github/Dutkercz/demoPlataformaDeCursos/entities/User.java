@@ -1,6 +1,6 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.entities;
 
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.EntityUpdateDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserUpdateDTO;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +18,7 @@ public abstract class User implements UserDetails {
     private String password;
     private String cpf;
     private String email;
-    private Boolean is_Active;
+    private Boolean isActive;
 
     public User (){
     }
@@ -29,10 +29,10 @@ public abstract class User implements UserDetails {
         this.password = password;
         this.email = email;
         this.cpf = cpf;
-        this.is_Active = isActive;
+        this.isActive = isActive;
     }
 
-    public void update(@Valid EntityUpdateDTO updateDTO) {
+    public void update(@Valid UserUpdateDTO updateDTO) {
         if (updateDTO.name() != null && !updateDTO.name().isBlank()){
             this.name = updateDTO.name();
         }
@@ -40,7 +40,7 @@ public abstract class User implements UserDetails {
             this.email = updateDTO.email();
         }
         if (updateDTO.password() != null && !updateDTO.password().isBlank()){
-            this.email = updateDTO.email();
+            this.password = updateDTO.password();
         }
     }
 
@@ -64,11 +64,11 @@ public abstract class User implements UserDetails {
         return email;
     }
 
-    public Boolean getIs_Active() {
-        return is_Active;
+    public Boolean getIsActive() {
+        return isActive;
     }
 
     public void setInactive() {
-        this.is_Active = false;
+        this.isActive = false;
     }
 }

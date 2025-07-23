@@ -2,7 +2,7 @@ package com.github.Dutkercz.demoPlataformaDeCursos.dtos;
 
 import jakarta.validation.constraints.Email;
 
-public record EntityUpdateDTO(
+public record UserUpdateDTO(
         String name,
         String password,
 

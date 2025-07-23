@@ -1,8 +1,8 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.services;
 
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.EntityRequestDTO;
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.EntityResponseDTO;
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.EntityUpdateDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserRequestDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserResponseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserUpdateDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Instructor;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Student;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
@@ -26,21 +26,21 @@ public class UserService{
     }
 
     @Transactional
-    public EntityResponseDTO saveEntity(@Valid EntityRequestDTO entityRequestDTO) {
-        String passwordEncoded = encoder.encode(entityRequestDTO.password());
+    public UserResponseDTO saveEntity(@Valid UserRequestDTO userRequestDTO) {
+        String passwordEncoded = encoder.encode(userRequestDTO.password());
 
-        if (entityRequestDTO.role().equalsIgnoreCase("aluno")){
-            Student student = new Student(null, entityRequestDTO.name(),
-                    passwordEncoded, entityRequestDTO.email(),
-                    entityRequestDTO.cpf(), true);
+        if (userRequestDTO.role().equalsIgnoreCase("aluno")){
+            Student student = new Student(null, userRequestDTO.name(),
+                    passwordEncoded, userRequestDTO.email(),
+                    userRequestDTO.cpf(), true);
 
-            return new EntityResponseDTO(userRepository.save(student));
+            return new UserResponseDTO(userRepository.save(student));
 
-        } else if (entityRequestDTO.role().equalsIgnoreCase("instrutor")) {
-            Instructor instructor = new Instructor(null, entityRequestDTO.name(),
-                    passwordEncoded, entityRequestDTO.email(),
-                    entityRequestDTO.cpf(), true);
-            return new EntityResponseDTO(userRepository.save(instructor));
+        } else if (userRequestDTO.role().equalsIgnoreCase("instrutor")) {
+            Instructor instructor = new Instructor(null, userRequestDTO.name(),
+                    passwordEncoded, userRequestDTO.email(),
+                    userRequestDTO.cpf(), true);
+            return new UserResponseDTO(userRepository.save(instructor));
 
         } else {
             throw new IllegalArgumentException("Role INVÁLIDO! Use 'Aluno' ou 'Instrutor'");
@@ -53,9 +53,9 @@ public class UserService{
     }
 
     @Transactional
-    public EntityResponseDTO updateUser(@Valid EntityUpdateDTO updateDTO, User user) {
+    public UserResponseDTO updateUser(@Valid UserUpdateDTO updateDTO, User user) {
         user = userVerification.validateUser(user.getEmail()) ;
         user.update(updateDTO);
-        return new EntityResponseDTO(user);
+        return new UserResponseDTO(user);
     }
 }
