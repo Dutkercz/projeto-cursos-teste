@@ -1,5 +1,7 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.exceptions;
 
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -37,12 +39,6 @@ public class RestExceptionsHandler {
         return ResponseEntity.badRequest().body(new ValidationErrors("error", e.getMessage()));
     }
 
-    public record ValidationErrors(String field, String message){
-        public ValidationErrors(FieldError errors){
-            this(errors.getField(), errors.getDefaultMessage());
-        }
-    }
-
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> entityNotFound(EntityNotFoundException e){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -51,5 +47,11 @@ public class RestExceptionsHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> handleAccessDenied(AccessDeniedException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    public record ValidationErrors(String field, String message){
+        public ValidationErrors(FieldError errors){
+            this(errors.getField(), errors.getDefaultMessage());
+        }
     }
 }

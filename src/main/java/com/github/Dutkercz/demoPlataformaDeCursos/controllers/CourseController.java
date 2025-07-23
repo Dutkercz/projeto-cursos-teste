@@ -28,7 +28,7 @@ public class CourseController {
                                                              UriComponentsBuilder builder){
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         ResponseCourseDTO courseDTO = courseService.createNewCourse(requestDTO, userEmail);
-        URI uri = builder.path("/course/{id}").buildAndExpand(courseDTO.id()).toUri();
+        URI uri = builder.path("/courses/{id}").buildAndExpand(courseDTO.id()).toUri();
         return ResponseEntity.created(uri).body(courseDTO);
     }
 
@@ -44,8 +44,8 @@ public class CourseController {
         return ResponseEntity.ok().body(coursesDTOS);
     }
 
-    @GetMapping("/instructor/{name}")
-    public ResponseEntity<Page<ResponseCourseDTO>> findCourseByInstructorName(@PathVariable String name,
+    @GetMapping("/by-instructor")
+    public ResponseEntity<Page<ResponseCourseDTO>> findCourseByInstructorName(@RequestParam String name,
                                                                               Pageable pageable){
         Page<ResponseCourseDTO> coursesDTOS = courseService.findByInstructorName(name, pageable);
         return ResponseEntity.ok().body(coursesDTOS);

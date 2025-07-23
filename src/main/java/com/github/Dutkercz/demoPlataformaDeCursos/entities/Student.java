@@ -14,8 +14,8 @@ public class Student extends User{
     public Student() {
     }
 
-    public Student(Long id, String name, String password, String email, String cpf) {
-        super(id, name, password, email, cpf);
+    public Student(Long id, String name, String password, String email, String cpf, Boolean isActive) {
+        super(id, name, password, email, cpf, isActive);
     }
 
     @Override
