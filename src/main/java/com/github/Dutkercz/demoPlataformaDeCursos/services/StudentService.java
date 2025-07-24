@@ -23,10 +23,17 @@ public class StudentService {
         this.courseRepository = courseRepository;
     }
 
+    /// retorna os estudent ativos
     public Page<StudentResponseDTO> findByActive(Pageable pageable){
         return studentRepository.findAllByIsActiveTrue(pageable).map(StudentResponseDTO::new);
     }
 
+    /***
+     * Encontra os cursos em que o aluno(Student) está matriculado
+     * @param user deve ser obrigatoriamente uma instancia de Student, caso o contrario ja retorna uma except
+     * @param pageable mantem a paginação do Json
+     * @return retorna um DTO com a lista dos cursos desse Student
+     */
     public Page<ResponseCourseDTO> findStudentCourses(User user, Pageable pageable) {
         if (!(user instanceof Student)){
             throw new AccessDeniedException("Hey, você não é um aluno!");

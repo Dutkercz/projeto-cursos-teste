@@ -39,7 +39,11 @@ public class Course {
     }
 
     public void addStudent(Student student){
-        this.students.add(student);
+        if (!this.students.contains(student)) {
+            this.students.add(student);
+            student.getEnrolledCourses().add(this);
+        }
+
     }
 
     public void removeStudent(Student student){

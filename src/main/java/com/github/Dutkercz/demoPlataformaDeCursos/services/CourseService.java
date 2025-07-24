@@ -2,8 +2,10 @@ package com.github.Dutkercz.demoPlataformaDeCursos.services;
 
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.RequestCourseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.ResponseCourseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.ResponseEnrollDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Course;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Instructor;
+import com.github.Dutkercz.demoPlataformaDeCursos.entities.Student;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.repositories.CourseRepository;
 import com.github.Dutkercz.demoPlataformaDeCursos.repositories.InstructorRepository;
@@ -52,5 +54,25 @@ public class CourseService {
     public Page<ResponseCourseDTO> findByInstructorName(String name, Pageable pageable) {
         return courseRepository.findAllByInstructorNameContainingIgnoreCase(name, pageable)
                 .map(ResponseCourseDTO::new);
+    }
+
+    /***
+     * Adicionar um novo aluno à lista de students da Entidade Courses
+     * @param user usuario logado, deve ser um Student para poder se matricular, caso contrario retona uma except
+     * @param courseId id do curso escolhido
+     * @return retorna um resumo da matricula (enroll)
+     */
+    @Transactional
+    public ResponseEnrollDTO enrollStudent(User user, Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("Curso de id "+courseId+" não encontrado"));
+
+        if (!(user instanceof Student)) {
+            throw new AccessDeniedException("Apenas alunos podem se matricular");
+        }
+        Student student = (Student) userVerification.validateUser(user.getEmail());
+        course.addStudent(student);
+        courseRepository.save(course);
+        return new ResponseEnrollDTO(course.getTitle(), course.getInstructor().getName(), student.getName());
     }
 }
