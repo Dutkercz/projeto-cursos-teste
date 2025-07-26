@@ -2,9 +2,7 @@ package com.github.Dutkercz.demoPlataformaDeCursos.controllers;
 
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.ResponseCourseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.StudentResponseDTO;
-import com.github.Dutkercz.demoPlataformaDeCursos.entities.Student;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
-import com.github.Dutkercz.demoPlataformaDeCursos.repositories.StudentRepository;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.StudentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

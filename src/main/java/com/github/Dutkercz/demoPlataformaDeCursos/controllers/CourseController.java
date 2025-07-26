@@ -1,6 +1,7 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.controllers;
 
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.RequestCourseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.RequestUpdateCourseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.ResponseCourseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.ResponseEnrollDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
@@ -59,5 +60,12 @@ public class CourseController {
                                                                               Pageable pageable){
         Page<ResponseCourseDTO> coursesDTOS = courseService.findByInstructorName(name, pageable);
         return ResponseEntity.ok().body(coursesDTOS);
+    }
+
+    @PutMapping("/{courseId}")
+    public ResponseEntity<?> updateCourse(@AuthenticationPrincipal User user, @PathVariable Long courseId,
+                                          @RequestBody RequestUpdateCourseDTO updateCourseDTO){
+        ResponseCourseDTO updatedCourseDTO = courseService.updateCourse(user, courseId, updateCourseDTO);
+        return ResponseEntity.ok().body(updatedCourseDTO);
     }
 }

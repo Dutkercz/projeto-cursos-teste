@@ -1,6 +1,7 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.services;
 
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.RequestCourseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.RequestUpdateCourseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.ResponseCourseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.ResponseEnrollDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Course;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 public class CourseService {
@@ -74,5 +77,17 @@ public class CourseService {
         course.addStudent(student);
         courseRepository.save(course);
         return new ResponseEnrollDTO(course.getTitle(), course.getInstructor().getName(), student.getName());
+    }
+
+    @Transactional
+    public ResponseCourseDTO updateCourse(User user, Long courseId, RequestUpdateCourseDTO updateCourseDTO) {
+        Instructor instructor = (Instructor) userVerification.validateUser(user.getEmail());
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("Curso de id " + courseId + " não encontrado"));
+        if (!Objects.equals(course.getInstructor().getId(), instructor.getId())){
+            throw new AccessDeniedException("Você deve ser o responsável pelo curso para fazer edições");
+        }
+        course.update(updateCourseDTO);
+        return new ResponseCourseDTO(courseRepository.save(course));
     }
 }

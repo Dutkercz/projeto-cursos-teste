@@ -1,5 +1,6 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.entities;
 
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.RequestUpdateCourseDTO;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -72,5 +73,17 @@ public class Course {
 
     public List<Student> getStudents() {
         return students;
+    }
+
+    public void update(RequestUpdateCourseDTO updateCourseDTO) {
+        if (updateCourseDTO.title() != null && !updateCourseDTO.title().isBlank()){
+            this.title = updateCourseDTO.title();
+        }
+        if (updateCourseDTO.description() != null && !updateCourseDTO.description().isBlank()){
+            this.description = updateCourseDTO.description();
+        }
+        if (updateCourseDTO.category() != null && !updateCourseDTO.category().isBlank()){
+            this.category = updateCourseDTO.category();
+        }
     }
 }

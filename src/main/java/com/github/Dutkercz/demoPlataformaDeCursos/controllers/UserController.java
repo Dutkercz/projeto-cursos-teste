@@ -3,6 +3,7 @@ package com.github.Dutkercz.demoPlataformaDeCursos.controllers;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserRequestDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserResponseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserUpdateDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.entities.Instructor;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.UserService;
 import jakarta.validation.Valid;
@@ -34,7 +35,8 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> getDetailTeste(@AuthenticationPrincipal User user){
-        return ResponseEntity.ok().body("Usuario logado " + user.getName());
+        return ResponseEntity.ok().body("Usuario logado: " + user.getName() + "\ntipo: " +
+                (user instanceof Instructor ? "Instrutor" : "Aluno"));
     }
 
     @PutMapping
