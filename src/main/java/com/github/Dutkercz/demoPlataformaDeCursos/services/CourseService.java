@@ -1,9 +1,6 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.services;
 
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.RequestCourseDTO;
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.RequestUpdateCourseDTO;
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.ResponseCourseDTO;
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.ResponseEnrollDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.*;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Course;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Instructor;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Student;
@@ -85,9 +82,35 @@ public class CourseService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new EntityNotFoundException("Curso de id " + courseId + " não encontrado"));
         if (!Objects.equals(course.getInstructor().getId(), instructor.getId())){
-            throw new AccessDeniedException("Você deve ser o responsável pelo curso para fazer edições");
+            throw new AccessDeniedException("Você não tem permissão para modificar este curso!");
         }
         course.update(updateCourseDTO);
         return new ResponseCourseDTO(courseRepository.save(course));
+    }
+
+    @Transactional
+    public void deleteCourse(User user, Long courseId) {
+        Instructor instructor = (Instructor) userVerification.validateUser(user.getEmail());
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("Curso de id " + courseId + " não encontrado"));
+        if (!Objects.equals(course.getInstructor().getId(), instructor.getId())){
+            throw new AccessDeniedException("Você não tem permissão para modificar este curso!");
+        }
+        courseRepository.deleteById(course.getId());
+    }
+
+    public Page<ResponseCourseDTO> findByCourseName(String courseTitle, Pageable pageable) {
+        return courseRepository.findAllByTitleContainingIgnoreCase(courseTitle, pageable)
+                .map(ResponseCourseDTO::new);
+    }
+
+    public Page<StudentResponseDTO> findStudentsCourse(User user, Long courseId, Pageable pageable) {
+        Instructor instructor = (Instructor) userVerification.validateUser(user.getEmail());
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("Curso de id " + courseId + " não encontrado"));
+        if (!Objects.equals(course.getInstructor().getId(), instructor.getId())){
+            throw new AccessDeniedException("Você não tem permissão para obter informações desse curso!");
+        }
+        return courseRepository.findAllStudentsById(courseId, pageable).map(StudentResponseDTO::new);
     }
 }
