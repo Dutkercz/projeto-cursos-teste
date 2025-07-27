@@ -1,4 +1,4 @@
-package com.github.Dutkercz.demoPlataformaDeCursos.dtos;
+package com.github.Dutkercz.demoPlataformaDeCursos.dtos.others;
 
 public record ResponseEnrollDTO(
         String courseName,

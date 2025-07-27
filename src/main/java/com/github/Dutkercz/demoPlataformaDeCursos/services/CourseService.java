@@ -1,6 +1,10 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.services;
 
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.*;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.course.RequestCourseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.course.RequestUpdateCourseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.course.ResponseCourseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.others.ResponseEnrollDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.student.StudentResponseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Course;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Instructor;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Student;
@@ -112,5 +116,11 @@ public class CourseService {
             throw new AccessDeniedException("Você não tem permissão para obter informações desse curso!");
         }
         return courseRepository.findAllStudentsById(courseId, pageable).map(StudentResponseDTO::new);
+    }
+
+    public Page<ResponseCourseDTO> findInstructorCourses(User user, Pageable pageable) {
+        Instructor instructor = (Instructor) userVerification.validateUser(user.getEmail());
+        return courseRepository.findAllByInstructorId(instructor.getId(), pageable)
+                .map(ResponseCourseDTO::new);
     }
 }

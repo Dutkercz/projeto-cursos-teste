@@ -1,7 +1,7 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.controllers;
 
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.TokenDTO;
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserLoginDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.others.TokenDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.user.UserLoginDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.TokenService;
 import org.springframework.http.ResponseEntity;

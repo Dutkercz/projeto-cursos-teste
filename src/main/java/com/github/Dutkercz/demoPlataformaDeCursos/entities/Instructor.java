@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,8 +16,8 @@ public class Instructor extends User{
     public Instructor() {
     }
 
-    public Instructor(Long id, String name, String password, String email, String cpf, Boolean isActive) {
-        super(id, name, password, email, cpf, isActive);
+    public Instructor(Long id, String name, String password, String email, String cpf, Boolean isActive, LocalDateTime registerDate) {
+        super(id, name, password, email, cpf, isActive, registerDate);
     }
 
     @Override
@@ -46,6 +47,6 @@ public class Instructor extends User{
 
     @Override
     public boolean isEnabled() {
-        return super.isEnabled();
+        return super.getIsActive();
     }
 }

@@ -1,4 +1,4 @@
-package com.github.Dutkercz.demoPlataformaDeCursos.dtos;
+package com.github.Dutkercz.demoPlataformaDeCursos.dtos.course;
 
 import jakarta.validation.constraints.NotBlank;
 

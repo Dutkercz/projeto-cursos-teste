@@ -21,4 +21,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             WHERE c.id = :courseId
             """)
     Page<Student> findAllStudentsById(@Param("courseId")Long courseId, Pageable pageable);
+
+    Page<Course> findAllByInstructorId(Long id, Pageable pageable);
 }

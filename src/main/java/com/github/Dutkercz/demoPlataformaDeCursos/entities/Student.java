@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,8 +24,8 @@ public class Student extends User{
     public Student() {
     }
 
-    public Student(Long id, String name, String password, String email, String cpf, Boolean isActive) {
-        super(id, name, password, email, cpf, isActive);
+    public Student(Long id, String name, String password, String email, String cpf, LocalDateTime registerDate, Boolean isActive) {
+        super(id, name, password, email, cpf,  isActive, registerDate);
     }
 
     @Override
@@ -54,6 +55,6 @@ public class Student extends User{
 
     @Override
     public boolean isEnabled() {
-        return super.isEnabled();
+        return super.getIsActive();
     }
 }

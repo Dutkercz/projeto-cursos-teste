@@ -1,4 +1,4 @@
-package com.github.Dutkercz.demoPlataformaDeCursos.dtos;
+package com.github.Dutkercz.demoPlataformaDeCursos.dtos.course;
 
 public record RequestUpdateCourseDTO(
         String title,

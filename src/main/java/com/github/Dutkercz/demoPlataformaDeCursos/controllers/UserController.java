@@ -1,8 +1,8 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.controllers;
 
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserRequestDTO;
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserResponseDTO;
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserUpdateDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.user.UserRequestDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.user.UserResponseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.user.UserUpdateDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Instructor;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.UserService;

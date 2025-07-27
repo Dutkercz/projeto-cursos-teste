@@ -1,12 +1,15 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.controllers;
 
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.*;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.course.RequestCourseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.course.RequestUpdateCourseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.course.ResponseCourseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.others.ResponseEnrollDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.student.StudentResponseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.CourseService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -81,6 +84,13 @@ public class CourseController {
                                                                        @PathVariable Long courseId, Pageable pageable){
         Page<StudentResponseDTO> studentResponseDTOS = courseService.findStudentsCourse(user, courseId, pageable);
         return ResponseEntity.ok().body(studentResponseDTOS);
+    }
+
+    @GetMapping("/my-courses")
+    public ResponseEntity<Page<ResponseCourseDTO>> findInstructorCourses(@AuthenticationPrincipal User user,
+                                                                         Pageable pageable){
+        Page<ResponseCourseDTO> courseDTOS = courseService.findInstructorCourses(user, pageable);
+        return ResponseEntity.ok().body(courseDTOS);
     }
 
     @DeleteMapping("/{courseId}")

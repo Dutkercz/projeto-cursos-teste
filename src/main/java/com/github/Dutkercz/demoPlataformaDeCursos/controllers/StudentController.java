@@ -1,7 +1,8 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.controllers;
 
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.ResponseCourseDTO;
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.StudentResponseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.course.ResponseCourseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.student.StudentDetails;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.student.StudentResponseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.StudentService;
 import org.springframework.data.domain.Page;
@@ -23,8 +24,9 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<StudentResponseDTO>> findAllStudents(Pageable pageable){
-        Page<StudentResponseDTO> students = studentService.findByActive(pageable);
+    public ResponseEntity<Page<StudentResponseDTO>> findAllStudents(@AuthenticationPrincipal User user,
+                                                                    Pageable pageable){
+        Page<StudentResponseDTO> students = studentService.findByActive(user, pageable);
         return ResponseEntity.ok().body(students);
     }
 
@@ -33,5 +35,11 @@ public class StudentController {
                                                                      Pageable pageable){
         Page<ResponseCourseDTO> courseDTOS = studentService.findStudentCourses(user, pageable);
         return ResponseEntity.ok().body(courseDTOS);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<StudentDetails> studentDetails(@AuthenticationPrincipal User user){
+        StudentDetails studentDetails = studentService.findById(user);
+        return ResponseEntity.ok().body(studentDetails);
     }
 }

@@ -1,4 +1,4 @@
-package com.github.Dutkercz.demoPlataformaDeCursos.dtos;
+package com.github.Dutkercz.demoPlataformaDeCursos.dtos.course;
 
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Course;
 

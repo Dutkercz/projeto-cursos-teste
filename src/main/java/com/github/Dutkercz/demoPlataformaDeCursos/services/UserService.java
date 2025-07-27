@@ -1,8 +1,8 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.services;
 
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserRequestDTO;
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserResponseDTO;
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.UserUpdateDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.user.UserRequestDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.user.UserResponseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.user.UserUpdateDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Instructor;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Student;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class UserService{
@@ -30,16 +32,27 @@ public class UserService{
         String passwordEncoded = encoder.encode(userRequestDTO.password());
 
         if (userRequestDTO.role().equalsIgnoreCase("aluno")){
-            Student student = new Student(null, userRequestDTO.name(),
-                    passwordEncoded, userRequestDTO.email(),
-                    userRequestDTO.cpf(), true);
+            Student student = new Student(
+                    null,
+                    userRequestDTO.name(),
+                    passwordEncoded,
+                    userRequestDTO.email(),
+                    userRequestDTO.cpf(),
+                    LocalDateTime.now(),
+                    true);
 
             return new UserResponseDTO(userRepository.save(student));
 
         } else if (userRequestDTO.role().equalsIgnoreCase("instrutor")) {
-            Instructor instructor = new Instructor(null, userRequestDTO.name(),
-                    passwordEncoded, userRequestDTO.email(),
-                    userRequestDTO.cpf(), true);
+            Instructor instructor = new Instructor(
+                    null,
+                    userRequestDTO.name(),
+                    passwordEncoded,
+                    userRequestDTO.email(),
+                    userRequestDTO.cpf(),
+                    true,
+                    LocalDateTime.now()
+                    );
             return new UserResponseDTO(userRepository.save(instructor));
 
         } else {

@@ -1,6 +1,6 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.entities;
 
-import com.github.Dutkercz.demoPlataformaDeCursos.dtos.RequestUpdateCourseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.course.RequestUpdateCourseDTO;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
