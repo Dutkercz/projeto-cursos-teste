@@ -5,6 +5,7 @@ import com.github.Dutkercz.demoPlataformaDeCursos.dtos.student.StudentDetails;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.student.StudentResponseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.StudentService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/students")
+@SecurityRequirement(name = "bearer-key")
 public class StudentController {
 
     private final StudentService studentService;

@@ -6,6 +6,7 @@ import com.github.Dutkercz.demoPlataformaDeCursos.dtos.user.UserUpdateDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Instructor;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +17,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/users")
+@SecurityRequirement(name = "bearer-key")
 public class UserController {
 
     private final UserService userService;

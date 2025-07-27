@@ -7,6 +7,7 @@ import com.github.Dutkercz.demoPlataformaDeCursos.dtos.others.ResponseEnrollDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.student.StudentResponseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.CourseService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping("/courses")
+@SecurityRequirement(name = "bearer-key")
 public class CourseController {
 
     private final CourseService courseService;
