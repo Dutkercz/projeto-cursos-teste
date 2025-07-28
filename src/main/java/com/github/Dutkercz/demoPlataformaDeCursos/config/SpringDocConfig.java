@@ -17,8 +17,8 @@ public class SpringDocConfig {
                 .components(new Components()
                         .addSecuritySchemes("bearer-key",
                                 new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
-                .info(new Info().title("CursosOnline-Project")
-                        .description("API REST da projeto plataforma de cursos.")
+                .info(new Info().title("Cursos Online - Project")
+                        .description("API REST do projeto plataforma de cursos.")
                         .contact(new Contact()
                                 .name("Cristian T. D. Rosa")
                                 .email("dutkercz@gmail.com")
