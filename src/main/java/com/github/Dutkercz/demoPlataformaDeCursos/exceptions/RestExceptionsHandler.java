@@ -1,30 +1,24 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.exceptions;
 
-import com.auth0.jwt.exceptions.JWTCreationException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.validation.Errors;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestControllerAdvice
 public class RestExceptionsHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> badRequestError(MethodArgumentNotValidException e){
+    public ResponseEntity<?> methodArgsNotValidError(MethodArgumentNotValidException e){
         List<FieldError> errors = e.getFieldErrors();
         return ResponseEntity.badRequest().body(errors.stream().map(ValidationErrors::new));
     }
@@ -40,13 +34,23 @@ public class RestExceptionsHandler {
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> entityNotFound(EntityNotFoundException e){
+    public ResponseEntity<?> entityNotFoundError(EntityNotFoundException e){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<?> handleAccessDenied(AccessDeniedException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    public ResponseEntity<?> accessDeniedError(AccessDeniedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso não autorizado " + e.getMessage());
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<?> authError(AuthenticationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Falha de autenticação " + e.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> badCredential(BadCredentialsException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
     }
 
     public record ValidationErrors(String field, String message){
