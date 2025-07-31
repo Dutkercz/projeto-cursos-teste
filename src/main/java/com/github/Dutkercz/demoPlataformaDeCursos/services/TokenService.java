@@ -28,22 +28,21 @@ public class TokenService {
                     .withIssuer("Courses-Online-Project")
                     .withExpiresAt(Instant.now().plus(2L, ChronoUnit.HOURS))
                     .sign(algorithm);
-        }catch (JWTCreationException exception){
-            throw new RuntimeException("Erro ao gerar token");
+        }catch (JWTCreationException e){
+            throw new JWTCreationException("Erro ao gerar token", e.getCause());
         }
     }
 
     public String getSubject(String token){
         try {
-
             Algorithm algorithm = Algorithm.HMAC256(ALGORITHM_KEY);
             return JWT.require(algorithm)
                     .withIssuer("Courses-Online-Project")
                     .build()
                     .verify(token)
                     .getSubject();
-        }catch (JWTVerificationException exception) {
-            throw new RuntimeException("Token inválido ou expirado!");
+        }catch (JWTVerificationException e) {
+            throw new JWTVerificationException("Token inválido ou expirado!");
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.github.Dutkercz.demoPlataformaDeCursos.config;
 
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.User;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.TokenService;
 import com.github.Dutkercz.demoPlataformaDeCursos.services.UserDetailService;
@@ -32,15 +34,19 @@ public class SecurityFilter extends OncePerRequestFilter {
         //não esquecer do espaço depois do "Bearer "
         if (requestHeader != null && requestHeader.startsWith("Bearer ")){
             String cleanToken = requestHeader.replace("Bearer ", "");
-            String userEmail = tokenService.getSubject(cleanToken);
+            try{
+                String userEmail = tokenService.getSubject(cleanToken);
+                User user = (User) userDetailService.loadUserByUsername(userEmail);
+                UsernamePasswordAuthenticationToken userAuth =
+                        new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
-            User user = (User) userDetailService.loadUserByUsername(userEmail);
-
-            UsernamePasswordAuthenticationToken userAuth =
-                    new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-
-            if (SecurityContextHolder.getContext().getAuthentication() == null){
-                SecurityContextHolder.getContext().setAuthentication(userAuth);
+                if (SecurityContextHolder.getContext().getAuthentication() == null){
+                    SecurityContextHolder.getContext().setAuthentication(userAuth);
+                }
+            } catch (JWTCreationException | JWTVerificationException e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token inválido ou expirado!");
+                return;
             }
         }
         filterChain.doFilter(request, response);
