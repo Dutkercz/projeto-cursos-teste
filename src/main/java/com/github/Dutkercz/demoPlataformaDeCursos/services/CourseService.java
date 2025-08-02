@@ -3,6 +3,7 @@ package com.github.Dutkercz.demoPlataformaDeCursos.services;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.course.RequestCourseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.course.RequestUpdateCourseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.course.ResponseCourseDTO;
+import com.github.Dutkercz.demoPlataformaDeCursos.dtos.mapper.CourseMapper;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.others.ResponseEnrollDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.dtos.student.StudentResponseDTO;
 import com.github.Dutkercz.demoPlataformaDeCursos.entities.Course;
@@ -26,11 +27,13 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final UserVerification userVerification;
     private final InstructorRepository instructorRepository;
+    private final CourseMapper courseMapper;
 
-    public CourseService(CourseRepository courseRepository, UserVerification userVerification, InstructorRepository instructorRepository) {
+    public CourseService(CourseRepository courseRepository, UserVerification userVerification, InstructorRepository instructorRepository, CourseMapper courseMapper) {
         this.courseRepository = courseRepository;
         this.userVerification = userVerification;
         this.instructorRepository = instructorRepository;
+        this.courseMapper = courseMapper;
     }
 
     @Transactional
@@ -38,26 +41,25 @@ public class CourseService {
         User user = userVerification.validateUser(userEmail);
         if (user instanceof Instructor){
             Instructor instructor = instructorRepository.getReferenceById(user.getId());
-            Course course = courseRepository.save(new Course(null, requestDTO.title(), requestDTO.description(),
-                    requestDTO.category(), instructor));
-            return new ResponseCourseDTO(course);
+            Course course = courseRepository.save(courseMapper.requestCourseToEntity(requestDTO, instructor));
+            return courseMapper.courseToDTO(course);
         }else {
             throw new AccessDeniedException("Apenas instrutores podem cadastar cursos");
         }
     }
 
     public Page<ResponseCourseDTO> findAll(Pageable pageable) {
-        return courseRepository.findAll(pageable).map(ResponseCourseDTO::new);
+        return courseRepository.findAll(pageable).map(courseMapper::courseToDTO);
     }
 
     public ResponseCourseDTO findCourseById(Long id) {
-        return new ResponseCourseDTO(courseRepository.findById(id)
+        return courseMapper.courseToDTO(courseRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Curso Id " + id + " não encontrado!")));
     }
 
     public Page<ResponseCourseDTO> findByInstructorName(String name, Pageable pageable) {
         return courseRepository.findAllByInstructorNameContainingIgnoreCase(name, pageable)
-                .map(ResponseCourseDTO::new);
+                .map(courseMapper::courseToDTO);
     }
 
     /***
@@ -77,7 +79,7 @@ public class CourseService {
         Student student = (Student) userVerification.validateUser(user.getEmail());
         course.addStudent(student);
         courseRepository.save(course);
-        return new ResponseEnrollDTO(course.getTitle(), course.getInstructor().getName(), student.getName());
+        return courseMapper.courseToEnroll(course, student);
     }
 
     @Transactional
@@ -89,11 +91,14 @@ public class CourseService {
             throw new AccessDeniedException("Você não tem permissão para modificar este curso!");
         }
         course.update(updateCourseDTO);
-        return new ResponseCourseDTO(courseRepository.save(course));
+        return courseMapper.courseToDTO(course);
     }
 
     @Transactional
     public void deleteCourse(User user, Long courseId) {
+        if (user instanceof Student){
+            throw new AccessDeniedException("Área restrita para instrutores");
+        }
         Instructor instructor = (Instructor) userVerification.validateUser(user.getEmail());
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new EntityNotFoundException("Curso de id " + courseId + " não encontrado"));
@@ -105,10 +110,13 @@ public class CourseService {
 
     public Page<ResponseCourseDTO> findByCourseName(String courseTitle, Pageable pageable) {
         return courseRepository.findAllByTitleContainingIgnoreCase(courseTitle, pageable)
-                .map(ResponseCourseDTO::new);
+                .map(courseMapper::courseToDTO);
     }
 
     public Page<StudentResponseDTO> findStudentsCourse(User user, Long courseId, Pageable pageable) {
+        if (user instanceof Student){
+            throw new AccessDeniedException("Você não tem permissão para obter informações desse curso!");
+        }
         Instructor instructor = (Instructor) userVerification.validateUser(user.getEmail());
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new EntityNotFoundException("Curso de id " + courseId + " não encontrado"));
@@ -119,6 +127,9 @@ public class CourseService {
     }
 
     public Page<ResponseCourseDTO> findInstructorCourses(User user, Pageable pageable) {
+        if (user instanceof Student){
+            throw new AccessDeniedException("Área restrita para instrutores");
+        }
         Instructor instructor = (Instructor) userVerification.validateUser(user.getEmail());
         return courseRepository.findAllByInstructorId(instructor.getId(), pageable)
                 .map(ResponseCourseDTO::new);

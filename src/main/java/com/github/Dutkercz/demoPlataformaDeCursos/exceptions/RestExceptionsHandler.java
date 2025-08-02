@@ -42,7 +42,7 @@ public class RestExceptionsHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> accessDeniedError(AccessDeniedException e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso não autorizado " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso não autorizado! " + e.getMessage());
     }
 
     @ExceptionHandler(AuthenticationException.class)
