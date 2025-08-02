@@ -44,7 +44,6 @@ public class Course {
             this.students.add(student);
             student.getEnrolledCourses().add(this);
         }
-
     }
 
     public void removeStudent(Student student){
@@ -69,6 +68,18 @@ public class Course {
 
     public Instructor getInstructor() {
         return instructor;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public void setInstructor(Instructor instructor) {
